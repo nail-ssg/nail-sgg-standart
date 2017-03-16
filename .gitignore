@@ -1,0 +1,13 @@
+*.cmd
+*.pyc
+*.egg-info/
+.config.yml
+.idea/
+.cache/
+env/
+dist/
+test/
+src/
+build/
+notebooks/
+tests/data/site/

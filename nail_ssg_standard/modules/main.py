@@ -29,11 +29,11 @@ class SsgMain(BasePlugin):
     _default_config = {
         'core': {
             'modules': {
-                "nail_ssg_standard.modules.static": True,
-                "nail_ssg_standard.modules.collections": True,
-                "nail_ssg_standard.modules.alias": True,
-                "nail_ssg_standard.modules.pages": True,
-                "nail_ssg_standard.modules.mixin": True,
+                "nail_ssg_standard.static": True,
+                "nail_ssg_standard.collections": True,
+                "nail_ssg_standard.alias": True,
+                "nail_ssg_standard.pages": True,
+                "nail_ssg_standard.mixin": True,
             },
         },
     }

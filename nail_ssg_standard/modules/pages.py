@@ -7,13 +7,6 @@ class Pages(BasePlugin):
 
     """docstring for Pages"""
     _default_config = {
-        'core': {
-            'modules': {
-                'nail_ssg_standard.pages': {
-                    'folder': 'pages'
-                }
-            }
-        },
         'scan': {
             'order': ['nail_ssg_standard.pages'],
             'pages':

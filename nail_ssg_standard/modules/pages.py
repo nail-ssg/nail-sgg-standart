@@ -63,7 +63,7 @@ class Pages(BasePlugin):
             # print(s)
             directory = os.path.split(new_path)[0]
             os.makedirs(directory, exist_ok=True)
-            with open(new_path, 'w+') as f:
+            with open(new_path, 'w+', encoding='utf-8') as f:
                 f.write(s)
             # print(directory)
 

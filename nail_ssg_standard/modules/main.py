@@ -70,7 +70,7 @@ class SsgMain(BasePlugin):
             data.update(_extract_yaml_data(filename))
 
     def init(self):
-        self.types = self.config('scan.types', [])
+        self.types = self.config('scan/types', [])
 
 
 def create(config):

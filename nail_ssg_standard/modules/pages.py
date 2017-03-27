@@ -9,13 +9,13 @@ class Pages(BasePlugin):
     _default_config = {
         'core': {
             'modules': {
-                'nail_ssg_standard.modules.pages': {
+                'nail_ssg_standard.pages': {
                     'folder': 'pages'
                 }
             }
         },
         'scan': {
-            'order': ['nail_ssg_standard.modules.pages'],
+            'order': ['nail_ssg_standard.pages'],
             'folder': 'pages',
             'types': [{
                 'type': 'page',
@@ -26,8 +26,8 @@ class Pages(BasePlugin):
                 ]
             }]
         },
-        'modify': {'order': ['nail_ssg_standard.modules.pages']},
-        'builders': {'order': ['nail_ssg_standard.modules.pages']},
+        'modify': {'order': ['nail_ssg_standard.pages']},
+        'builders': {'order': ['nail_ssg_standard.pages']},
     }
     _config_comments = {}
 
@@ -35,7 +35,7 @@ class Pages(BasePlugin):
         super(Pages, self).__init__(config)
 
     def init(self):
-        self.folder = os.path.join(self.config.full_src_path, self.config('scan.pages.folder'))
+        self.folder = os.path.join(self.config.full_src_path, self.config('scan/pages/folder'))
         self.config.data['pages'] = []
 
     def modify_data(self):

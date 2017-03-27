@@ -16,7 +16,10 @@ class Pages(BasePlugin):
         },
         'scan': {
             'order': ['nail_ssg_standard.pages'],
-            'folder': 'pages',
+            'pages':
+            {
+                'folder': 'pages'
+            },
             'types': [{
                 'type': 'page',
                 'extractData': True,

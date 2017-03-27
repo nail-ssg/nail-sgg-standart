@@ -15,16 +15,17 @@ class Pages(BasePlugin):
             }
         },
         'scan': {
+            'order': ['nail_ssg_standard.modules.pages'],
+            'folder': 'pages',
             'types': [{
                 'type': 'page',
                 'extractData': True,
                 'rules': [
-                        'fileMask = *.html',
+                    'fileMask = *.html',
                     'regexp = \.page\.',
                 ]
             }]
         },
-        'scan': {'order': ['nail_ssg_standard.modules.pages']},
         'modify': {'order': ['nail_ssg_standard.modules.pages']},
         'builders': {'order': ['nail_ssg_standard.modules.pages']},
     }

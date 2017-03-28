@@ -71,13 +71,13 @@ class SsgMain(BasePlugin):
 
     def init(self):
         self.types = self.config('scan/types', [])
-        setattr(self.config,'get_data', self.get_data)
+        setattr(self.config.data,'get_data', self.get_data)
 
     def get_data(self, path):
-        if 'data' not in self.config['data']:
+        if 'data' not in self:
             return {}
-        if path in self.config['data']['data']:
-            return self.config['data']['data'][path]
+        if path in self['data']:
+            return self['data'][path]
         return {} # todo: Здесь должен быть перебор модулей которые умееют работать с путями
 
 

@@ -160,6 +160,6 @@ def create(config):
     return Pages(config)
 
 def render_file(self, path, context):
-    data = self.config.get_data(path).copy()
+    data = self.config.data.get_data(path).copy()
     dict_concat(data, context)
     return self.render_page(data)

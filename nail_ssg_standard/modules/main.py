@@ -74,7 +74,7 @@ class SsgMain(BasePlugin):
         setattr(self.config,'get_data', self._get_data)
 
     def _get_data(self, path):
-        if 'data' not in self:
+        if 'data' not in self.data:
             return {}
         if path in self.data['data']:
             return self.data['data'][path]

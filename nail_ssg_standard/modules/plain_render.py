@@ -1,5 +1,5 @@
-from nail_ssg.modules.baserender import BaseRender
+from nail_ssg_base import baserender
 
 
 def create(config):
-    return BaseRender(config)
+    return baserender.BaseRender(config)

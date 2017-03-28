@@ -155,11 +155,11 @@ class Pages(BasePlugin):
         result = ''.join(lines)
         return result
 
+    def render_file(self, path, context):
+        data = self.config.get_data(path).copy()
+        dict_concat(data, context)
+        return self.render_page(data)
+
 
 def create(config):
     return Pages(config)
-
-def render_file(self, path, context):
-    data = self.config.get_data(path).copy()
-    dict_concat(data, context)
-    return self.render_page(data)

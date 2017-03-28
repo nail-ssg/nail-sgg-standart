@@ -117,7 +117,7 @@ class Pages(BasePlugin):
             if 'load' in local_context:
                 for var in local_context['load']:
                     other_page_path = local_context['load'][var]
-                    context[var] = self.renderFile(other_page_path, context)
+                    context[var] = self.render_file(other_page_path, context)
         else:
             local_context = {'renders': []}
         if '$text' in local_context:
@@ -142,7 +142,7 @@ class Pages(BasePlugin):
                 else:
                     block_name = '$content'
                 context[block_name] = text
-                text = self.renderFile(render_options['extend'], context)
+                text = self.render_file(render_options['extend'], context)
         return text
 
     def get_text(self, path: str) -> str:
@@ -158,3 +158,8 @@ class Pages(BasePlugin):
 
 def create(config):
     return Pages(config)
+
+def render_file(self, path, context):
+    data = self.config.get_data(path).copy()
+    dict_concat(data, context)
+    return self.render_page(data)

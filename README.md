@@ -22,10 +22,9 @@ scan:
   - page
   - data
   - static
-  pages:
-    folder: pages
   types:
   - type: page
+    folder: pages
     extractData: true
     rules:
     - fileMask = *.html

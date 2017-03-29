@@ -1,5 +1,7 @@
-from nail_ssg_base.modules.baseplugin import BasePlugin
 import os
+import copy
+from nail_ssg_base.prints import *
+from nail_ssg_base.modules.baseplugin import BasePlugin
 from nail_config.common import dict_enrich, dict_concat
 
 
@@ -9,18 +11,23 @@ class Pages(BasePlugin):
     _default_config = {
         'scan': {
             'order': ['nail_ssg_standard.pages'],
-            'pages':
-            {
-                'folder': 'pages'
-            },
-            'types': [{
-                'type': 'page',
-                'extractData': True,
-                'rules': [
-                    'fileMask = *.html',
-                    'regexp = \.page\.',
-                ]
-            }]
+            'types': {
+                'page': {
+                    'folder': 'pages',
+                    'extractData': True,
+                    'rules': [
+                        'fileMask = *.html',
+                        'regexp = \.page\.',
+                    ],
+                },
+                'template': {
+                    'folder': '*',
+                    'extractData': True,
+                    'rules': [
+                        'fileMask = *.html'
+                    ],
+                }
+            }
         },
         'modify': {'order': ['nail_ssg_standard.pages']},
         'builders': {'order': ['nail_ssg_standard.pages']},
@@ -31,7 +38,9 @@ class Pages(BasePlugin):
         super(Pages, self).__init__(config)
 
     def init(self):
-        self.folder = os.path.join(self.config.full_src_path, self.config('scan/pages/folder'))
+        folder = self.config('scan/types/page/folder')
+        self.folder = os.path.join(self.config.full_src_path, folder)
+        self.config.data['pages'] = []
         self.config.data['pages'] = []
 
     def modify_data(self):
@@ -41,10 +50,7 @@ class Pages(BasePlugin):
         data = super().process_file(fileinfo, rules, data)
         if 'page' in rules:
             rel_path = os.path.relpath(fileinfo['full_path'], self.folder)
-            data_ext = {
-                '$global': {'url': rel_path.replace(os.sep, '/')},
-                '$computed': {'file': fileinfo['full_path']}
-            }
+            data_ext = {'$global':{'url': rel_path.replace(os.sep, '/')}}
             data.update(dict_enrich(data, data_ext))
             self.config.data['pages'] += [data]
         return data
@@ -72,7 +78,7 @@ class Pages(BasePlugin):
             return ''
         if '$computed' not in page:
             return ''
-        context = page.copy()
+        context = copy.deepcopy(page)
         external_context = context['$computed']
         external_context['all'] = self.config.data
         external_context['collections'] = {}
@@ -156,8 +162,11 @@ class Pages(BasePlugin):
         return result
 
     def render_file(self, path, context):
-        data = self.config.get_data(path).copy()
-        dict_concat(data, context)
+        short_contex = copy.deepcopy(context)
+        del short_contex['$computed']
+        del short_contex['$local']['renders']
+        data = copy.deepcopy(self.config.get_data(path))
+        dict_concat(data, short_contex)
         return self.render_page(data)
 
 

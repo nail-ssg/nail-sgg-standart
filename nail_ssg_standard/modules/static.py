@@ -1,10 +1,80 @@
+import os
+from nail_ssg_base.prints import *
+from nail_config.common import dict_enrich, dict_concat
 from nail_ssg_base.modules.baseplugin import BasePlugin
+from shutil import copyfile
 
 
 class Static(BasePlugin):
-    _default_config = {}     # dict
-    _config_comments = {}    # dict
-    pass
+    _default_config = {
+        'scan': {
+            'order': [
+                'nail_ssg_standard.static'
+            ],
+            'types': {
+                'static': {
+                    'extractData': False,
+                    'folders': ['static', 'pages', ],
+                    'rules': [
+                        'fileMask = *.css',
+                        'fileMask = *.js',
+                        'fileMask = *.jpg',
+                        'fileMask = *.jpeg',
+                        'fileMask = *.png',
+                        'fileMask = *.gif',
+                        'fileMask = *.pdf',
+                    ]
+                }
+            }
+        },
+        'modify': {
+            'order': [
+                'nail_ssg_standard.static'
+            ],
+        },
+        'build': {
+            'order': [
+                'nail_ssg_standard.static'
+            ],
+        }
+    }
+    _config_comments = {
+        'scan.types.static.folders': 'List folders with static content. The priority of folder increases',
+    }
+
+    def __init__(self, config):
+        super().__init__(config)
+        self.folders = []
+
+    def init(self):
+        self.folders = self.config('scan/types/static/folders')
+        self.config.data['static'] = {}
+        for folder in self.folders:
+            self.config.data['static'][folder] = {}
+
+    def process_file(self, fileinfo, rules, data):
+        folder = fileinfo['root']
+        if folder in self.folders and 'static' in rules:
+            rel_path = os.path.relpath(fileinfo['full_path'], self.config.full_src_path).split(os.sep, 1)[1]
+            data_ext = {'$global': {'url': rel_path.replace(os.sep, '/')}}
+            data.update(dict_enrich(data, data_ext))
+            self.config.data['static'][folder][rel_path] = data
+        return data
+
+    def modify_data(self):
+        pass
+
+    def build(self):
+        result = {}
+        static = self.config.data['static']
+        for folder in self.folders:
+            result.update(static[folder])
+        for rel_path in result:
+            dst = os.path.join(self.config.full_dst_path, rel_path)
+            directory = os.path.dirname(dst)
+            src = result[rel_path]['$computed']['file']
+            os.makedirs(directory, exist_ok=True)
+            copyfile(src, dst)
 
 
 def create(config):

@@ -19,6 +19,10 @@ class Pages(BasePlugin):
                         'fileMask = *.html',
                         'regexp = \.page\.',
                     ],
+                    'rename': [
+                        '=(.*)\.page(\..*)=\1\2=',
+                        '~((.*)\.html)~\1/index.html~'
+                    ]
                 },
                 'template': {
                     'folder': '*',
@@ -30,9 +34,11 @@ class Pages(BasePlugin):
             }
         },
         'modify': {'order': ['nail_ssg_standard.pages']},
-        'builders': {'order': ['nail_ssg_standard.pages']},
+        'build': {'order': ['nail_ssg_standard.pages']},
     }
-    _config_comments = {}
+    _config_comments = {
+        'scan.types.page.rename': 'First char is delimiter'
+    }
 
     def __init__(self, config):
         super(Pages, self).__init__(config)
@@ -40,7 +46,6 @@ class Pages(BasePlugin):
     def init(self):
         folder = self.config('scan/types/page/folder')
         self.folder = os.path.join(self.config.full_src_path, folder)
-        self.config.data['pages'] = []
         self.config.data['pages'] = []
 
     def modify_data(self):
@@ -50,7 +55,7 @@ class Pages(BasePlugin):
         data = super().process_file(fileinfo, rules, data)
         if 'page' in rules:
             rel_path = os.path.relpath(fileinfo['full_path'], self.folder)
-            data_ext = {'$global':{'url': rel_path.replace(os.sep, '/')}}
+            data_ext = {'$global': {'url': rel_path.replace(os.sep, '/')}}
             data.update(dict_enrich(data, data_ext))
             self.config.data['pages'] += [data]
         return data

@@ -71,6 +71,7 @@ class SsgMain(BasePlugin):
             file_type = self.types[type_name]
             folder = os.path.relpath(fileinfo['folder'], self.config.full_src_path)
             folder = folder.split(os.sep, 1)[0]
+            fileinfo['root'] = folder
             fld = file_type.get('folder', '*')
             data_ext = {
                 '$computed': {

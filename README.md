@@ -19,25 +19,25 @@ core:
     options:
 scan:
   order:
-  - page
+  - pages
   - data
   - static
   types:
-  - type: page
-    folder: pages
-    extractData: true
-    rules:
-    - fileMask = *.html
-    - regExp = \.page\.
-  - type: data
-    extractData: true
-    rules:
-    - fileMask = *.yml
-    - regExp = \.data\.
-  - type: static
-    extractData: false
-    rules:
-    - fileMask = *.*
+  - page:
+      folder: pages
+      extractData: true
+      rules:
+      - fileMask = *.html
+      - regExp = \.page\.
+  - data:
+      extractData: true
+      rules:
+      - fileMask = *.yml
+      - regExp = \.data\.
+  - static:
+      extractData: false
+      rules:
+      - fileMask = *.*
 
 modify:
   order:

@@ -8,6 +8,7 @@ setup(
     long_description=open(join(dirname(__file__), 'README.md')).read(),
     install_requires=[
         'pystache>=0.5.4',
+        'markdown>=2.6.8',
         'nail.ssg.base>=0.1.0',
         'ruamel.yaml>=0.13.14'
     ],

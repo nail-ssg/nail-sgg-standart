@@ -3,6 +3,7 @@ import types
 import ruamel.yaml as yaml
 from nail_ssg_base.modules.baseplugin import BasePlugin
 from nail_ssg_base.check_rules import check_rule
+import warnings
 
 
 def _extract_yaml_data(filename: str):
@@ -26,9 +27,13 @@ def _extract_yaml_data(filename: str):
         result = {}
     return result
 
+modified_step = False
+
 
 def _get_data(self, path):
-    print(self)
+    if not modified_step:
+        warnings.warn('No recommended use get_data before "modified" step', stacklevel=2)
+    # print(self)
     if 'data' not in self.data:
         return {}
     if path in self.data['data']:
@@ -45,8 +50,18 @@ class SsgMain(BasePlugin):
                 "nail_ssg_standard.alias": True,
                 "nail_ssg_standard.pages": True,
                 "nail_ssg_standard.mixin": True,
-            },
+            }
         },
+        'scan': {
+            'types': {
+                'data': {
+                    'extractData': True,
+                    'rules': [
+                        'fileMask = *.yml'
+                    ]
+                }
+            }
+        }
     }
     _config_comments = {}
     name = 'main'
@@ -57,6 +72,8 @@ class SsgMain(BasePlugin):
             return
 
     def modify_data(self):
+        global modified_step
+        modified_step = True
         super().modify_data()
 
     def build(self):
@@ -90,7 +107,13 @@ class SsgMain(BasePlugin):
                         extract_data = extract_data or file_type['extractData']
         if extract_data:
             filename = fileinfo['full_path']
-            data.update(_extract_yaml_data(filename))
+            if 'data' in rules:
+                with open(filename, 'r', encoding='utf-8') as f:
+                    d = yaml.load(f, Loader=yaml.Loader)
+                    d = d if d else {}
+                    data.update(d)    
+            else:
+                data.update(_extract_yaml_data(filename))
 
     def init(self):
         self.types = self.config('scan/types', [])
@@ -99,3 +122,5 @@ class SsgMain(BasePlugin):
 
 def create(config):
     return SsgMain(config)
+
+__all__ = [SsgMain, create]

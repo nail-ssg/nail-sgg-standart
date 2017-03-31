@@ -4,7 +4,25 @@ from nail_ssg_base.modules.baseplugin import BasePlugin
 class Collections(BasePlugin):
     _default_config = {}     # dict
     _config_comments = {}    # dict
-    pass
+
+    def init(self):
+        self.config.data['collections'] = {}
+        pass
+
+    def process_file(self, fileinfo, rules, data):
+        coll_names = data.get('$global', {'collections': []}).get('collections', [])
+        collections = self.config.data['collections']
+        for collection in coll_names:
+            if collection not in collections:
+                collections[collection] = []
+            self.config.data['collections'][collection] += [data]
+        return data
+
+    def modify_data(self):
+        pass
+
+    def build(self):
+        pass
 
 
 def create(config):

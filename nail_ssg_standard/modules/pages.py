@@ -20,8 +20,11 @@ class Pages(BasePlugin):
                         'regexp = \.page\.',
                     ],
                     'rename': [
-                        '=(.*)\.page(\..*)=\1\2=',
-                        '~((.*)\.html)~\1/index.html~'
+                        r'=(.*)\.page(\..*)=\1\2=',
+                        r'~((.*)\.html)~\1/index.html~'
+                    ],
+                    'norename': [
+                        r'^index.html$',
                     ]
                 },
                 'template': {

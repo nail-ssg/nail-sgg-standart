@@ -36,8 +36,8 @@ class Pages(BasePlugin):
                 }
             }
         },
-        'modify': {'order': ['nail_ssg_standard.pages']},
         'build': {'order': ['nail_ssg_standard.pages']},
+        # 'modify': {'order': ['nail_ssg_standard.pages']},
     }
     _config_comments = {
         'scan.types.page.rename': 'First char is delimiter'
@@ -55,10 +55,10 @@ class Pages(BasePlugin):
         super().modify_data()
 
     def process_file(self, fileinfo, rules, data):
-        data = {}
         super().process_file(fileinfo, rules, data)
         if 'page' in rules:
             rel_path = os.path.relpath(fileinfo['full_path'], self.folder)
+            # todo: rename and norename
             data_ext = {'$global': {'url': rel_path.replace(os.sep, '/')}}
             data.update(dict_enrich(data, data_ext))
             self.config.pages += [data]
@@ -67,7 +67,6 @@ class Pages(BasePlugin):
     def build(self):
         super().build()
         pages = self.config.pages
-        # print(pages)
         for page in pages:
             url = page['$global']['url']
             if url[-1] == '/':

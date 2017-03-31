@@ -1,6 +1,7 @@
+import copy
 from nail_config.common import dict_enrich, dict_concat
 from nail_ssg_base.modules.baseplugin import BasePlugin
-from nail_ssg_base.prints import *
+# from nail_ssg_base.prints import *
 
 
 class Mixin(BasePlugin):
@@ -17,7 +18,6 @@ class Mixin(BasePlugin):
     def init(self):
         self.config.mixins = []
 
-
     def process_file(self, fileinfo, rules, data):
         if '$mixin' in data:
             self.config.mixins += [data]
@@ -30,13 +30,15 @@ class Mixin(BasePlugin):
                 continue
             result = {}
             for mixin in mixins:
-                d = self.config.get_data(mixin)
+                d = copy.deepcopy(self.config.get_data(mixin))
+                del d['$computed']
+                if 'abstract' in d['$global']:
+                    del d['$global']['abstract']
                 result = dict_enrich(result, d)
-            result = dict_enrich(result, data)
+            result = dict_enrich(data, result)
             data.update(result)
             del data['$mixin']
         del self.config.mixins
-        yprint(self.config.data)
 
     def build(self):
         pass

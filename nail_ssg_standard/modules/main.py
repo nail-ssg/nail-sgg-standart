@@ -1,9 +1,9 @@
 import os
 import types
+import warnings
 import ruamel.yaml as yaml
 from nail_ssg_base.modules.baseplugin import BasePlugin
 from nail_ssg_base.check_rules import check_rule
-import warnings
 
 
 def _extract_yaml_data(filename: str):
@@ -43,7 +43,7 @@ def _get_data(self, path):
     if result is None:
         for module in self.modules:
             result = module.get_data()
-        return result if result not is None else {}
+        return result if result is not None else {}
     # todo: Здесь должен быть перебор модулей которые умееют работать с путями
     return self.data.get(path, {})
 

@@ -27,11 +27,6 @@ class Static(BasePlugin):
                 }
             }
         },
-        'modify': {
-            'order': [
-                'nail_ssg_standard.static'
-            ],
-        },
         'build': {
             'order': [
                 'nail_ssg_standard.static'

@@ -30,15 +30,22 @@ def _extract_yaml_data(filename: str):
 modified_step = False
 
 
+def _set_data(self, path, value):
+    self.data[path] = value
+
+
 def _get_data(self, path):
     if not modified_step:
         warnings.warn('No recommended use get_data before "modified" step', stacklevel=2)
     # print(self)
-    if 'data' not in self.data:
-        return {}
-    if path in self.data['data']:
-        return self.data['data'][path]
-    return {}  # todo: Здесь должен быть перебор модулей которые умееют работать с путями
+    result = self.main_module.old_get_data(path)
+    modules = self('getData/order')
+    if result is None:
+        for module in self.modules:
+            result = module.get_data()
+        return result if result not is None else {}
+    # todo: Здесь должен быть перебор модулей которые умееют работать с путями
+    return self.data.get(path, {})
 
 
 class SsgMain(BasePlugin):
@@ -61,6 +68,9 @@ class SsgMain(BasePlugin):
                     ]
                 }
             }
+        },
+        'getData': {
+            'order': []
         }
     }
     _config_comments = {}
@@ -111,13 +121,15 @@ class SsgMain(BasePlugin):
                 with open(filename, 'r', encoding='utf-8') as f:
                     d = yaml.load(f, Loader=yaml.Loader)
                     d = d if d else {}
-                    data.update(d)    
+                    data.update(d)
             else:
                 data.update(_extract_yaml_data(filename))
 
     def init(self):
         self.types = self.config('scan/types', [])
+        self.old_get_data = self.config.get_data
         self.config.get_data = types.MethodType(_get_data, self.config)
+        self.config.set_data = types.MethodType(_set_data, self.config)
 
 
 def create(config):

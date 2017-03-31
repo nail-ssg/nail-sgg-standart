@@ -49,23 +49,24 @@ class Pages(BasePlugin):
     def init(self):
         folder = self.config('scan/types/page/folder')
         self.folder = os.path.join(self.config.full_src_path, folder)
-        self.config.data['pages'] = []
+        self.config.pages = []
 
     def modify_data(self):
         super().modify_data()
 
     def process_file(self, fileinfo, rules, data):
-        data = super().process_file(fileinfo, rules, data)
+        data = {}
+        super().process_file(fileinfo, rules, data)
         if 'page' in rules:
             rel_path = os.path.relpath(fileinfo['full_path'], self.folder)
             data_ext = {'$global': {'url': rel_path.replace(os.sep, '/')}}
             data.update(dict_enrich(data, data_ext))
-            self.config.data['pages'] += [data]
+            self.config.pages += [data]
         return data
 
     def build(self):
         super().build()
-        pages = self.config.data['pages']
+        pages = self.config.pages
         # print(pages)
         for page in pages:
             url = page['$global']['url']

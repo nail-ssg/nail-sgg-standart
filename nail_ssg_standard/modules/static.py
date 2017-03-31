@@ -48,9 +48,9 @@ class Static(BasePlugin):
 
     def init(self):
         self.folders = self.config('scan/types/static/folders')
-        self.config.data['static'] = {}
+        self.config.static = {}
         for folder in self.folders:
-            self.config.data['static'][folder] = {}
+            self.config.static[folder] = {}
 
     def process_file(self, fileinfo, rules, data):
         folder = fileinfo['root']
@@ -58,7 +58,7 @@ class Static(BasePlugin):
             rel_path = os.path.relpath(fileinfo['full_path'], self.config.full_src_path).split(os.sep, 1)[1]
             data_ext = {'$global': {'url': rel_path.replace(os.sep, '/')}}
             data.update(dict_enrich(data, data_ext))
-            self.config.data['static'][folder][rel_path] = data
+            self.config.static[folder][rel_path] = data
         return data
 
     def modify_data(self):
@@ -66,7 +66,7 @@ class Static(BasePlugin):
 
     def build(self):
         result = {}
-        static = self.config.data['static']
+        static = self.config.static
         for folder in self.folders:
             result.update(static[folder])
         for rel_path in result:

@@ -93,9 +93,9 @@ $local:
   use:
     css:
       from: css
-      sort: '+line'
-      offset: 0
-      count: 10
+      sort: ['+line','-href']
+      page: 0
+      page_length: 10
   load:
     - var1: file1
     - var2: file2

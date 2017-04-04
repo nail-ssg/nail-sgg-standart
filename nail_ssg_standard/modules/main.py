@@ -48,6 +48,19 @@ def _get_data(self, path):
     return self.data.get(path, {})
 
 
+class FileWrapper:
+
+    def __init__(self, file):
+        self.f = file
+        print(file)
+
+    def read(self, *arg, **karg):
+        s = self.f.read(*arg, **karg)
+        if s.strip()[:3] != '...':
+            return ''
+        return s
+
+
 class SsgMain(BasePlugin):
     _default_config = {
         'core': {
@@ -119,7 +132,8 @@ class SsgMain(BasePlugin):
             filename = fileinfo['full_path']
             if 'data' in rules:
                 with open(filename, 'r', encoding='utf-8') as f:
-                    d = yaml.load(f, Loader=yaml.Loader)
+                    fw = FileWrapper(f)
+                    d = yaml.load(fw, Loader=yaml.Loader)
                     d = d if d else {}
                     data.update(d)
             else:

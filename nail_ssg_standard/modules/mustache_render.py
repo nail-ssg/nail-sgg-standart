@@ -22,7 +22,12 @@ class Mustache(BaseRender):
         if 'partials' in render_options:
             for partial_name in render_options['partials']:
                 partial_path = render_options['partials'][partial_name]
-                partials[partial_name] = site_builder.renderFile(partial_path, context)
+                partials[partial_name] = ''
+                # partials[partial_name] = site_builder.renderFile(partial_path, context)
+                if 'inset' in self.config.signals:
+                    signal_result = self.config.signals['inset'](inset_name=partial_path, context=context)
+                    if len(signal_result) >0:
+                        partials[partial_name] = signal_result[0]
         renderer = Renderer(partials=partials)
         s = renderer.render(text, context)
         return s

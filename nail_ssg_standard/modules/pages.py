@@ -171,7 +171,7 @@ class Pages(BasePlugin):
 
     def render_file(self, path, context):
         self._deep += 1
-        yprint(context)
+        yprint(context['$local']['renders'])
         if self._deep == 10:
             return ''
         short_contex = copy.deepcopy(context)

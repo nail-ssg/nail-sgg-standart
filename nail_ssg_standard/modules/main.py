@@ -52,7 +52,7 @@ class FileWrapper:
 
     def __init__(self, file):
         self.f = file
-        print(file)
+        # print(file)
 
     def read(self, *arg, **karg):
         s = self.f.read(*arg, **karg)

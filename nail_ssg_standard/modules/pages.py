@@ -42,7 +42,7 @@ class Pages(BasePlugin):
     _config_comments = {
         'scan.types.page.rename': 'First char is delimiter'
     }
-
+    _deep = 0
     def __init__(self, config):
         super(Pages, self).__init__(config)
 
@@ -170,6 +170,10 @@ class Pages(BasePlugin):
         return result
 
     def render_file(self, path, context):
+        self._deep += 1
+        yprint(context)
+        if self._deep == 10:
+            return ''
         short_contex = copy.deepcopy(context)
         del short_contex['$computed']
         del short_contex['$local']['renders']

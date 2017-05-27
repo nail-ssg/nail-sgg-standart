@@ -10,6 +10,7 @@ setup(
         'pystache>=0.5.4',
         'markdown>=2.6.8',
         'nail.ssg.base>=0.1.0',
+        'blinker>=1.4',
         'ruamel.yaml>=0.13.14'
     ],
     dependency_links=[

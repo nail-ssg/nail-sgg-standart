@@ -157,6 +157,9 @@ class Pages(BasePlugin):
                     block_name = '$content'
                 context[block_name] = text
                 self._deep += 1
+                print('render_options')
+                yprint(render_options)
+                print('-'*20)
                 text = self.render_file(render_options['extend'], context)
                 self._deep -= 1
         return text

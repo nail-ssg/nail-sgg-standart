@@ -42,7 +42,6 @@ class Pages(BasePlugin):
     _config_comments = {
         'scan.types.page.rename': 'First char is delimiter'
     }
-    _deep = 0
 
     def __init__(self, config):
         super(Pages, self).__init__(config)
@@ -74,13 +73,10 @@ class Pages(BasePlugin):
                 url += 'index.html'
             new_path = os.path.join(self.config.full_dst_path, url.replace('/', os.sep))
             s = self.render_page(page)
-            # print(new_path)
-            # print(s)
             directory = os.path.split(new_path)[0]
             os.makedirs(directory, exist_ok=True)
             with open(new_path, 'w+', encoding='utf-8') as f:
                 f.write(s)
-            # print(directory)
 
     def render_page(self, page: dict) -> str:
         if page is None or page == {}:
@@ -132,12 +128,7 @@ class Pages(BasePlugin):
             if 'load' in local_context:
                 for var in local_context['load']:
                     other_page_path = local_context['load'][var]
-                    self._deep += 1
-                    print('*'*20, 'render options')
-                    yprint(render_options)
-                    print('-'*20)
                     context[var] = self.render_file(other_page_path, context)
-                    self._deep -= 1
         else:
             local_context = {'renders': []}
         if '$text' in local_context:
@@ -151,10 +142,8 @@ class Pages(BasePlugin):
             render_module = self.config.get_module('nail_ssg_standard.modules.'+render_type+'_render')
             if render_module is None:
                 render_module = self.config.get_module('plain_render')
-            # print('> '*3, render_module)
             if render_module is None:
                 return text
-            # render = _renders[render_type]
             text = render_module.render(text, context, render_options)
             if 'extend' in render_options:
                 if 'blockName' in render_options:
@@ -176,8 +165,6 @@ class Pages(BasePlugin):
         return result
 
     def render_file(self, path, context):
-        if self._deep == 10:
-            return ''
         short_contex = copy.deepcopy(context)
         del short_contex['$computed']
         del short_contex['$local']['renders']
@@ -185,9 +172,6 @@ class Pages(BasePlugin):
             del short_contex['$local']['load']
         data = copy.deepcopy(self.config.get_data(path))
         dict_concat(data, short_contex)
-        print('deep', self._deep)
-        print(context['$computed']['file'])
-        yprint(data['$local']['renders'])
         return self.render_page(data)
 
 

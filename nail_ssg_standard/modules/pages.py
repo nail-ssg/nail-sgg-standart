@@ -156,7 +156,9 @@ class Pages(BasePlugin):
                 else:
                     block_name = '$content'
                 context[block_name] = text
+                self._deep += 1
                 text = self.render_file(render_options['extend'], context)
+                self._deep -= 1
         return text
 
     def get_text(self, path: str) -> str:
@@ -170,9 +172,6 @@ class Pages(BasePlugin):
         return result
 
     def render_file(self, path, context):
-        self._deep += 1
-        yprint(context['$computed'])
-        yprint(context['$local']['renders'])
         if self._deep == 10:
             return ''
         short_contex = copy.deepcopy(context)
@@ -180,6 +179,9 @@ class Pages(BasePlugin):
         del short_contex['$local']['renders']
         data = copy.deepcopy(self.config.get_data(path))
         dict_concat(data, short_contex)
+        print('deep', self._deep)
+        print(context['$computed']['file'])
+        yprint(data['$local']['renders'])
         return self.render_page(data)
 
 

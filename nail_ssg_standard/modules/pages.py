@@ -181,7 +181,8 @@ class Pages(BasePlugin):
         short_contex = copy.deepcopy(context)
         del short_contex['$computed']
         del short_contex['$local']['renders']
-        del short_contex['$local']['load']
+        if 'load' in short_contex['$local']:
+            del short_contex['$local']['load']
         data = copy.deepcopy(self.config.get_data(path))
         dict_concat(data, short_contex)
         print('deep', self._deep)

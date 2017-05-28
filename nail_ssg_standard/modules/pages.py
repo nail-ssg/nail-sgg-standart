@@ -43,6 +43,7 @@ class Pages(BasePlugin):
         'scan.types.page.rename': 'First char is delimiter'
     }
     _deep = 0
+
     def __init__(self, config):
         super(Pages, self).__init__(config)
 
@@ -131,7 +132,12 @@ class Pages(BasePlugin):
             if 'load' in local_context:
                 for var in local_context['load']:
                     other_page_path = local_context['load'][var]
+                    self._deep += 1
+                    print('*'*20, 'render options')
+                    yprint(render_options)
+                    print('-'*20)
                     context[var] = self.render_file(other_page_path, context)
+                    self._deep -= 1
         else:
             local_context = {'renders': []}
         if '$text' in local_context:
@@ -156,12 +162,7 @@ class Pages(BasePlugin):
                 else:
                     block_name = '$content'
                 context[block_name] = text
-                self._deep += 1
-                print('render_options')
-                yprint(render_options)
-                print('-'*20)
                 text = self.render_file(render_options['extend'], context)
-                self._deep -= 1
         return text
 
     def get_text(self, path: str) -> str:
@@ -180,6 +181,7 @@ class Pages(BasePlugin):
         short_contex = copy.deepcopy(context)
         del short_contex['$computed']
         del short_contex['$local']['renders']
+        del short_contex['$local']['load']
         data = copy.deepcopy(self.config.get_data(path))
         dict_concat(data, short_contex)
         print('deep', self._deep)

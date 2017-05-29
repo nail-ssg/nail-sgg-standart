@@ -26,7 +26,7 @@ class Mustache(BaseRender):
                 # partials[partial_name] = site_builder.renderFile(partial_path, context)
                 if 'inset' in self.config.signals:
                     signal_result = self.config.signals['inset'](inset_name=partial_path, context=context)
-                    if len(signal_result) >0:
+                    if len(signal_result) > 0:
                         partials[partial_name] = signal_result[0]
         renderer = Renderer(partials=partials)
         s = renderer.render(text, context)

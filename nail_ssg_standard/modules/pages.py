@@ -73,13 +73,10 @@ class Pages(BasePlugin):
                 url += 'index.html'
             new_path = os.path.join(self.config.full_dst_path, url.replace('/', os.sep))
             s = self.render_page(page)
-            # print(new_path)
-            # print(s)
             directory = os.path.split(new_path)[0]
             os.makedirs(directory, exist_ok=True)
             with open(new_path, 'w+', encoding='utf-8') as f:
                 f.write(s)
-            # print(directory)
 
     def render_page(self, page: dict) -> str:
         if page is None or page == {}:
@@ -145,10 +142,8 @@ class Pages(BasePlugin):
             render_module = self.config.get_module('nail_ssg_standard.modules.'+render_type+'_render')
             if render_module is None:
                 render_module = self.config.get_module('plain_render')
-            # print('> '*3, render_module)
             if render_module is None:
                 return text
-            # render = _renders[render_type]
             text = render_module.render(text, context, render_options)
             if 'extend' in render_options:
                 if 'blockName' in render_options:
@@ -173,6 +168,8 @@ class Pages(BasePlugin):
         short_contex = copy.deepcopy(context)
         del short_contex['$computed']
         del short_contex['$local']['renders']
+        if 'load' in short_contex['$local']:
+            del short_contex['$local']['load']
         data = copy.deepcopy(self.config.get_data(path))
         dict_concat(data, short_contex)
         return self.render_page(data)

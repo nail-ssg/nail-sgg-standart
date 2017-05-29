@@ -102,19 +102,19 @@ $local:
   collections:
     css:
       - href: style1.css
-        line: 10.312
+        index: a
       - href: style2.css
-        line: 20
+        index: b
     js:
       - href: script1.js
-        line: 10.312
+        index: a
       - href: script2.js
-        line: 10.313
+        index: b
     load:
       var3: file3
       var4: file4
     loadCollections:
       var5: folder
-dataName1: dataValue1
-dataName2: dataValue2
+property1: propertyValue1
+property2: propertyValue2
 ```

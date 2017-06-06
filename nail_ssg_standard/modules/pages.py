@@ -3,6 +3,7 @@ import copy
 from nail_ssg_base.prints import *
 from nail_ssg_base.modules.baseplugin import BasePlugin
 from nail_config.common import dict_enrich, dict_concat
+from blinker import signal
 
 
 class Pages(BasePlugin):
@@ -43,8 +44,12 @@ class Pages(BasePlugin):
         'scan.types.page.rename': 'First char is delimiter'
     }
 
+    def _inset(sender, inset_name='', context=None):
+        return sender.render_file(inset_name, context)
+
     def __init__(self, config):
         super(Pages, self).__init__(config)
+        self.signals['inset'] = signal('inset').connect(self._inset)
 
     def init(self):
         folder = self.config('scan/types/page/folder')

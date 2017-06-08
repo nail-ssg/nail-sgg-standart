@@ -44,12 +44,17 @@ class Pages(BasePlugin):
         'scan.types.page.rename': 'First char is delimiter'
     }
 
-    def _inset(sender, inset_name='', context=None):
-        return sender.render_file(inset_name, context)
+    def _inset(self, sender, inset_name='', context=None):
+        # print(inset_name, context)
+        return self.render_file(inset_name, context)
+
+    def _inset2(sender, *a, **k):
+        print(a, k)
+        return None
 
     def __init__(self, config):
         super(Pages, self).__init__(config)
-        self.signals['inset'] = signal('inset').connect(self._inset)
+        signal('inset').connect(self._inset)
 
     def init(self):
         folder = self.config('scan/types/page/folder')
@@ -182,3 +187,4 @@ class Pages(BasePlugin):
 
 def create(config):
     return Pages(config)
+

@@ -1,5 +1,6 @@
 import os
 import copy
+import re
 from nail_ssg_base.prints import *
 from nail_ssg_base.modules.baseplugin import BasePlugin
 from nail_config.common import dict_enrich, dict_concat
@@ -22,7 +23,7 @@ class Pages(BasePlugin):
                     ],
                     'rename': [
                         r'=(.*)\.page(\..*)=\1\2=',
-                        r'~((.*)\.html)~\1/index.html~'
+                        r'~((.*)\.html)~\1/~'
                     ],
                     'norename': [
                         r'^index.html$',
@@ -45,12 +46,7 @@ class Pages(BasePlugin):
     }
 
     def _inset(self, sender, inset_name='', context=None):
-        # print(inset_name, context)
         return self.render_file(inset_name, context)
-
-    def _inset2(sender, *a, **k):
-        print(a, k)
-        return None
 
     def __init__(self, config):
         super(Pages, self).__init__(config)
@@ -61,15 +57,33 @@ class Pages(BasePlugin):
         self.folder = os.path.join(self.config.full_src_path, folder)
         self.config.pages = []
 
-    def modify_data(self):
-        super().modify_data()
+    # def modify_data(self):
+    #     super().modify_data()
 
     def process_file(self, fileinfo, rules, data):
         super().process_file(fileinfo, rules, data)
         if 'page' in rules:
             rel_path = os.path.relpath(fileinfo['full_path'], self.folder)
             # todo: rename and norename
-            data_ext = {'$global': {'url': rel_path.replace(os.sep, '/')}}
+
+            url = data.get('$global', {}).get('url', None)
+            if url is None:
+                url = rel_path.replace(os.sep, '/')
+            norename = False
+            norename_conditions = self.config.get_option('scan/types/page/norename')
+            for norename_condition in norename_conditions:
+                norename = norename or re.search(norename_condition, url) != None
+            if not norename:
+                rename_conditions = self.config.get_option('scan/types/page/rename')
+                for rename_condition in rename_conditions:
+                    separator = rename_condition[0]
+                    assert separator == rename_condition[-1]
+                    repl_from, repl_to = rename_condition[1:-1].split(separator)
+                    new_url = re.sub(repl_from, repl_to, url)
+                    if new_url != url:
+                        url = new_url
+                        break
+            data_ext = {'$computed': {'url': url}}
             data.update(dict_enrich(data, data_ext))
             self.config.pages += [data]
         return data
@@ -78,7 +92,7 @@ class Pages(BasePlugin):
         super().build()
         pages = self.config.pages
         for page in pages:
-            url = page['$global']['url']
+            url = page['$computed']['url']
             if url[-1] == '/':
                 url += 'index.html'
             new_path = os.path.join(self.config.full_dst_path, url.replace('/', os.sep))
@@ -187,4 +201,3 @@ class Pages(BasePlugin):
 
 def create(config):
     return Pages(config)
-

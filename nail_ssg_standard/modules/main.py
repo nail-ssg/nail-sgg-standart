@@ -2,6 +2,7 @@ import os
 import types
 import warnings
 import ruamel.yaml as yaml
+from nail_ssg_base.prints import *
 from nail_ssg_base.modules.baseplugin import BasePlugin
 from nail_ssg_base.check_rules import check_rule
 
@@ -46,19 +47,6 @@ def _get_data(self, path):
         return result if result is not None else {}
     # todo: Здесь должен быть перебор модулей которые умееют работать с путями
     return self.data.get(path, {})
-
-
-class FileWrapper:
-
-    def __init__(self, file):
-        self.f = file
-        # print(file)
-
-    def read(self, *arg, **karg):
-        s = self.f.read(*arg, **karg)
-        if s.strip()[:3] != '...':
-            return ''
-        return s
 
 
 class SsgMain(BasePlugin):
@@ -123,7 +111,6 @@ class SsgMain(BasePlugin):
                 for rule in file_type['rules']:
                     validation = check_rule(rule, fileinfo['name'])
                     if validation:
-                        # print(validation, fileinfo['name'])
                         if type_name not in rules:
                             rules[type_name] = []
                         rules[type_name] += [rule]
@@ -132,8 +119,7 @@ class SsgMain(BasePlugin):
             filename = fileinfo['full_path']
             if 'data' in rules:
                 with open(filename, 'r', encoding='utf-8') as f:
-                    fw = FileWrapper(f)
-                    d = yaml.load(fw, Loader=yaml.Loader)
+                    d = yaml.load(f, Loader=yaml.Loader)
                     d = d if d else {}
                     data.update(d)
             else:

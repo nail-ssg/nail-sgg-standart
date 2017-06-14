@@ -18,14 +18,14 @@ class Pages(BasePlugin):
                     'directory': 'pages',
                     'extractData': True,
                     'rules': {
-                                            'fileMask = *.html': True,
-                                            'regexp = \.page\.': True,},
+                        'fileMask = *.html': True,
+                        'regexp = \.page\.': True, },
                     'rename': {
                         r'=(.*)\.page(\..*)=\1\2=': True,
                         r'~(.*)\.html~\1/~': True
                     },
                     'norename': {
-                        r'^index.html$': True
+                        r'(^|/)index.html$': True
                     }
                 },
                 'template': {
@@ -82,6 +82,7 @@ class Pages(BasePlugin):
                     if new_url != url:
                         url = new_url
                         break
+
             data_ext = {'$computed': {'url': url}}
             dict_update(data, data_ext)
             self.config.pages += [data]

@@ -33,7 +33,7 @@ class Static(BasePlugin):
         }
     }
     _config_comments = {
-        'scan.types.static.folders': 'List folders with static content. The priority of folder increases',
+        'scan/types/static/folders': 'List folders with static content. The priority of folder increases',
     }
 
     def __init__(self, config):

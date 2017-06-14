@@ -42,7 +42,7 @@ class Pages(BasePlugin):
         # 'modify': {'order': ['nail_ssg_standard.pages']},
     }
     _config_comments = {
-        'scan.types.page.rename': 'First char is delimiter'
+        'scan/types/page/rename': 'First char is delimiter'
     }
 
     def _inset(self, sender, inset_name='', context=None):
@@ -70,11 +70,11 @@ class Pages(BasePlugin):
             if url is None:
                 url = rel_path.replace(os.sep, '/')
             norename = False
-            norename_conditions = self.config.get_option('scan/types/page/norename')
+            norename_conditions = self.config('scan/types/page/norename')
             for norename_condition in norename_conditions:
                 norename = norename or re.search(norename_condition, url) != None
             if not norename:
-                rename_conditions = self.config.get_option('scan/types/page/rename')
+                rename_conditions = self.config('scan/types/page/rename')
                 for rename_condition in rename_conditions:
                     separator = rename_condition[0]
                     assert separator == rename_condition[-1]

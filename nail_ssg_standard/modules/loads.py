@@ -6,10 +6,10 @@ from nail_ssg_base.modules.baseplugin import BasePlugin
 
 class Loads(BasePlugin):
     _default_config = {
-        'scan': {
+        '10. scan': {
             'order': ['nail_ssg_standard.loads']
         },
-        'modify': {
+        '20. modify': {
             'order': ['nail_ssg_standard.loads']
         }
     }

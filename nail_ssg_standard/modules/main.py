@@ -40,7 +40,7 @@ def _get_data(self, path):
         warnings.warn('No recommended use get_data before "modified" step', stacklevel=2)
     # print(self)
     result = self.main_module.old_get_data(path)
-    modules = self('getData/order')
+    modules = self('20. getData/order')
     if result is None:
         for module in self.modules:
             result = module.get_data()
@@ -51,7 +51,7 @@ def _get_data(self, path):
 
 class SsgMain(BasePlugin):
     _default_config = {
-        'core': {
+        '00. core': {
             'modules': {
                 "nail_ssg_standard.static": True,
                 "nail_ssg_standard.collections": True,
@@ -59,7 +59,7 @@ class SsgMain(BasePlugin):
                 "nail_ssg_standard.pages": True,
             }
         },
-        'scan': {
+        '10. scan': {
             'types': {
                 'data': {
                     'extractData': True,
@@ -69,7 +69,7 @@ class SsgMain(BasePlugin):
                 }
             }
         },
-        'getData': {
+        '20. getData': {
             'order': []
         }
     }
@@ -96,10 +96,10 @@ class SsgMain(BasePlugin):
         extract_data = False
         for type_name in self.types:
             file_type = self.types[type_name]
-            folder = os.path.relpath(fileinfo['folder'], self.config.full_src_path)
+            folder = os.path.relpath(fileinfo['directory'], self.config.full_src_path)
             folder = folder.split(os.sep, 1)[0]
             fileinfo['root'] = folder
-            fld = file_type.get('folder', '*')
+            fld = file_type.get('directory', '*')
             data_ext = {
                 '$computed': {
                     'file': fileinfo['full_path']
@@ -125,7 +125,7 @@ class SsgMain(BasePlugin):
                 data.update(_extract_yaml_data(filename))
 
     def init(self):
-        self.types = self.config('scan/types', [])
+        self.types = self.config('10. scan/types', [])
         self.old_get_data = self.config.get_data
         self.config.get_data = types.MethodType(_get_data, self.config)
         self.config.set_data = types.MethodType(_set_data, self.config)

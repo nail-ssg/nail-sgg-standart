@@ -3,7 +3,7 @@ from nail_ssg_base.modules.baseplugin import BasePlugin
 
 class Alias(BasePlugin):
     _default_config = {
-        'getData': {
+        '20. getData': {
             'order': ['nail_ssg_standard.alias']
         }
     }     # dict

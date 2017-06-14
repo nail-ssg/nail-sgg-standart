@@ -31,7 +31,7 @@ def multikeysort(items, columns):
 
 class Collections(BasePlugin):
     _default_config = {
-        'modify': {
+        '30. modify': {
             'order': ['nail_ssg_standard.collections']
         }
     }

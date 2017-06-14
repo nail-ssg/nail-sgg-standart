@@ -6,14 +6,14 @@ from shutil import copyfile
 
 class Static(BasePlugin):
     _default_config = {
-        'scan': {
+        '10. scan': {
             'order': [
                 'nail_ssg_standard.static'
             ],
             'types': {
                 'static': {
                     'extractData': False,
-                    'folders': ['static', 'pages', ],
+                    'directories': ['static', 'pages', ],
                     'rules': [
                         'fileMask = *.css',
                         'fileMask = *.js',
@@ -26,14 +26,14 @@ class Static(BasePlugin):
                 }
             }
         },
-        'build': {
+        '40. build': {
             'order': [
                 'nail_ssg_standard.static'
             ],
         }
     }
     _config_comments = {
-        'scan/types/static/folders': 'List folders with static content. The priority of folder increases',
+        '10. scan/types/static/directories': 'Directories with static content. The priority of folder increases',
     }
 
     def __init__(self, config):
@@ -41,7 +41,7 @@ class Static(BasePlugin):
         self.folders = []
 
     def init(self):
-        self.folders = self.config('scan/types/static/folders')
+        self.folders = self.config('10. scan/types/static/directories')
         self.config.static = {}
         for folder in self.folders:
             self.config.static[folder] = {}

@@ -11,26 +11,25 @@ class Pages(BasePlugin):
 
     """docstring for Pages"""
     _default_config = {
-        'scan': {
+        '10. scan': {
             'order': ['nail_ssg_standard.pages'],
             'types': {
                 'page': {
-                    'folder': 'pages',
+                    'directory': 'pages',
                     'extractData': True,
-                    'rules': [
-                        'fileMask = *.html',
-                        'regexp = \.page\.',
-                    ],
-                    'rename': [
-                        r'=(.*)\.page(\..*)=\1\2=',
-                        r'~((.*)\.html)~\1/~'
-                    ],
-                    'norename': [
-                        r'^index.html$',
-                    ]
+                    'rules': {
+                                            'fileMask = *.html': True,
+                                            'regexp = \.page\.': True,},
+                    'rename': {
+                        r'=(.*)\.page(\..*)=\1\2=': True,
+                        r'~(.*)\.html~\1/~': True
+                    },
+                    'norename': {
+                        r'^index.html$': True
+                    }
                 },
                 'template': {
-                    'folder': '*',
+                    'directory': '*',
                     'extractData': True,
                     'rules': [
                         'fileMask = *.html'
@@ -38,11 +37,11 @@ class Pages(BasePlugin):
                 }
             }
         },
-        'build': {'order': ['nail_ssg_standard.pages']},
+        '40. build': {'order': ['nail_ssg_standard.pages']},
         # 'modify': {'order': ['nail_ssg_standard.pages']},
     }
     _config_comments = {
-        'scan/types/page/rename': 'First char is delimiter'
+        '10. scan/types/page/rename': 'First char is delimiter'
     }
 
     def _inset(self, sender, inset_name='', context=None):
@@ -53,7 +52,7 @@ class Pages(BasePlugin):
         signal('inset').connect(self._inset)
 
     def init(self):
-        folder = self.config('scan/types/page/folder')
+        folder = self.config('10. scan/types/page/directory')
         self.folder = os.path.join(self.config.full_src_path, folder)
         self.config.pages = []
 
@@ -70,11 +69,11 @@ class Pages(BasePlugin):
             if url is None:
                 url = rel_path.replace(os.sep, '/')
             norename = False
-            norename_conditions = self.config('scan/types/page/norename')
+            norename_conditions = self.config('10. scan/types/page/norename')
             for norename_condition in norename_conditions:
                 norename = norename or re.search(norename_condition, url) != None
             if not norename:
-                rename_conditions = self.config('scan/types/page/rename')
+                rename_conditions = self.config('10. scan/types/page/rename')
                 for rename_condition in rename_conditions:
                     separator = rename_condition[0]
                     assert separator == rename_condition[-1]

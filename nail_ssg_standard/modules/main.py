@@ -57,7 +57,6 @@ class SsgMain(BasePlugin):
                 "nail_ssg_standard.collections": True,
                 "nail_ssg_standard.alias": True,
                 "nail_ssg_standard.pages": True,
-                "nail_ssg_standard.mixin": True,
             }
         },
         'scan': {

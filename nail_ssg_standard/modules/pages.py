@@ -1,10 +1,10 @@
 import os
-import copy
 import re
 from nail_ssg_base.prints import *
 from nail_ssg_base.modules.baseplugin import BasePlugin
-from nail_config.common import dict_enrich, dict_concat
+from nail_config.common import dict_update, dict_glue
 from blinker import signal
+from copy import deepcopy
 
 
 class Pages(BasePlugin):
@@ -84,7 +84,7 @@ class Pages(BasePlugin):
                         url = new_url
                         break
             data_ext = {'$computed': {'url': url}}
-            data.update(dict_enrich(data, data_ext))
+            dict_update(data, data_ext)
             self.config.pages += [data]
         return data
 
@@ -107,19 +107,19 @@ class Pages(BasePlugin):
             return ''
         if '$computed' not in page:
             return ''
-        context = copy.deepcopy(page)
+        context = deepcopy(page)
         external_context = context['$computed']
         external_context['all'] = self.config.data
         external_context['collections'] = {}
         loc_coll = {}  # Локальные коллекции
         if '$global' in context:
-            dict_concat(external_context['collections'], loc_coll)
+            dict_update(external_context['collections'], loc_coll, False)
 
         if '$local' in context:
             local_context = context['$local']
             if 'collections' not in local_context:
                 local_context['collections'] = {}
-            dict_concat(loc_coll, local_context['collections'])
+            dict_update(loc_coll, local_context['collections'], False)
             if 'use' in local_context:
                 for var_name in local_context['use']:
                     var_options = local_context['use'][var_name]
@@ -161,7 +161,7 @@ class Pages(BasePlugin):
             text = self.get_text(external_context['file'])
         for render_options in local_context['renders']:
             if 'data' in render_options:
-                dict_concat(context, render_options['data'])
+                dict_update(context, render_options['data'], False)
             render_type = render_options['type']
             render_module = self.config.get_module('nail_ssg_standard.modules.'+render_type+'_render')
             if render_module is None:
@@ -189,13 +189,13 @@ class Pages(BasePlugin):
         return result
 
     def render_file(self, path, context):
-        short_contex = copy.deepcopy(context)
+        short_contex = deepcopy(context)
         del short_contex['$computed']
         del short_contex['$local']['renders']
         if 'load' in short_contex['$local']:
             del short_contex['$local']['load']
-        data = copy.deepcopy(self.config.get_data(path))
-        dict_concat(data, short_contex)
+        data = deepcopy(self.config.get_data(path))
+        dict_update(data, short_contex, False)
         return self.render_page(data)
 
 

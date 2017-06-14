@@ -1,7 +1,6 @@
 import markdown
 from nail_ssg_base.prints import *
 from nail_ssg_base.modules.baserender import BaseRender
-from nail_config.common import dict_enrich, dict_concat
 
 
 class Markdown(BaseRender):

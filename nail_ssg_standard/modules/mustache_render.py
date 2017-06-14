@@ -1,8 +1,10 @@
 from nail_ssg_base.prints import *
 from pystache import Renderer
 from nail_ssg_base.modules.baserender import BaseRender
-from nail_config.common import dict_enrich, dict_concat
+from nail_config.common import dict_update, dict_glue
 import blinker
+from copy import deepcopy
+
 
 class Mustache(BaseRender):
 
@@ -17,8 +19,7 @@ class Mustache(BaseRender):
         # yprint(context)
         partials = {}
         if 'data' in render_options:
-            context = context.copy()
-            dict_concat(context, render_options['data'])
+            context = dict_glue(context, render_options['data'], False)
         if 'partials' in render_options:
             for partial_name in render_options['partials']:
                 partial_path = render_options['partials'][partial_name]

@@ -75,7 +75,7 @@ builders:
 $load:                                      # nail_ssg_standard.load
   .: data_path1                             # 
   propertyName: data_path2                  # 
-  propertyName.subProperty: data_path3      # 
+  propertyName/subProperty: data_path3      # 
 $global:                                    # 
   alias:                                    # nail_ssg_standard.alias
     name: aliasName                         # 

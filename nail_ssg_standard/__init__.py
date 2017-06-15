@@ -6,6 +6,7 @@ from .modules import static
 from .modules import plain_render
 from .modules import markdown_render
 from .modules import mustache_render
+from .modules import loads
 
 __all__ = [
     main,
@@ -16,4 +17,5 @@ __all__ = [
     plain_render,
     markdown_render,
     mustache_render,
+    loads,
 ]

@@ -56,12 +56,24 @@ def _read(self, size=None):
     lines = s.splitlines()
     i = 1
     for line in lines:
-        if '...'==line[:3]:
+        if '...' == line[:3]:
             s = '\n'.join(lines[:i])
             self.close()
             break
         i += 1
     return s
+
+
+def read_data(filename, data, as_yaml=True):
+    if as_yaml:
+        with open(filename, 'r', encoding='utf-8') as f:
+            f.old_read = f.read
+            f.read = MethodType(_read, f)
+            d = yaml.load(f, Loader=yaml.Loader)
+            d = d if d else {}
+            data.update(d)
+    else:
+        data.update(_extract_yaml_data(filename))
 
 
 class SsgMain(BasePlugin):
@@ -72,6 +84,7 @@ class SsgMain(BasePlugin):
                 "nail_ssg_standard.collections": True,
                 "nail_ssg_standard.alias": True,
                 "nail_ssg_standard.pages": True,
+                "nail_ssg_standard.loads": True,
             }
         },
         '10. scan': {
@@ -129,17 +142,10 @@ class SsgMain(BasePlugin):
                             rules[type_name] = []
                         rules[type_name] += [rule]
                         extract_data = extract_data or file_type['extractData']
+        data['$computed']['rules'] = rules
         if extract_data:
             filename = fileinfo['full_path']
-            if 'data' in rules:
-                with open(filename, 'r', encoding='utf-8') as f:
-                    f.old_read = f.read
-                    f.read = MethodType(_read, f)
-                    d = yaml.load(f, Loader=yaml.Loader)
-                    d = d if d else {}
-                    data.update(d)
-            else:
-                data.update(_extract_yaml_data(filename))
+            read_data(filename, data, 'data' in rules)
 
     def init(self):
         self.types = self.config('10. scan/types', [])

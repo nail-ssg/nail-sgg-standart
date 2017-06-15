@@ -1,7 +1,7 @@
 import os
-import types
 import warnings
 import ruamel.yaml as yaml
+from types import MethodType
 from nail_ssg_base.prints import *
 from nail_ssg_base.modules.baseplugin import BasePlugin
 from nail_ssg_base.check_rules import check_rule
@@ -47,6 +47,21 @@ def _get_data(self, path):
         return result if result is not None else {}
     # todo: Здесь должен быть перебор модулей которые умееют работать с путями
     return self.data.get(path, {})
+
+
+def _read(self, size=None):
+    if self.closed:
+        return ''
+    s = self.old_read(size)
+    lines = s.splitlines()
+    i = 1
+    for line in lines:
+        if '...'==line[:3]:
+            s = '\n'.join(lines[:i])
+            self.close()
+            break
+        i += 1
+    return s
 
 
 class SsgMain(BasePlugin):
@@ -118,6 +133,8 @@ class SsgMain(BasePlugin):
             filename = fileinfo['full_path']
             if 'data' in rules:
                 with open(filename, 'r', encoding='utf-8') as f:
+                    f.old_read = f.read
+                    f.read = MethodType(_read, f)
                     d = yaml.load(f, Loader=yaml.Loader)
                     d = d if d else {}
                     data.update(d)
@@ -127,8 +144,8 @@ class SsgMain(BasePlugin):
     def init(self):
         self.types = self.config('10. scan/types', [])
         self.old_get_data = self.config.get_data
-        self.config.get_data = types.MethodType(_get_data, self.config)
-        self.config.set_data = types.MethodType(_set_data, self.config)
+        self.config.get_data = MethodType(_get_data, self.config)
+        self.config.set_data = MethodType(_set_data, self.config)
 
 
 def create(config):

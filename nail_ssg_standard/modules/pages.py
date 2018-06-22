@@ -2,7 +2,7 @@ import os
 import re
 from nail_ssg_base.prints import *
 from nail_ssg_base.modules.baseplugin import BasePlugin
-from nail_config.common import dict_update, dict_glue
+from nail_config.common import dict_update
 from blinker import signal
 from copy import deepcopy
 
@@ -19,7 +19,7 @@ class Pages(BasePlugin):
                     'extractData': True,
                     'rules': {
                         'fileMask = *.html': True,
-                        'regexp = \.page\.': True, },
+                        r'regexp = \.page\.': True, },
                     'rename': {
                         r'=(.*)\.page(\..*)=\1\2=': True,
                         r'~(.*)\.html~\1/~': True
@@ -71,7 +71,7 @@ class Pages(BasePlugin):
             norename = False
             norename_conditions = self.config('10. scan/types/page/norename')
             for norename_condition in norename_conditions:
-                norename = norename or re.search(norename_condition, url) != None
+                norename = norename or re.search(norename_condition, url) is not None
             if not norename:
                 rename_conditions = self.config('10. scan/types/page/rename')
                 for rename_condition in rename_conditions:
@@ -163,7 +163,7 @@ class Pages(BasePlugin):
             if 'data' in render_options:
                 dict_update(context, render_options['data'], False)
             render_type = render_options['type']
-            render_module = self.config.get_module('nail_ssg_standard.modules.'+render_type+'_render')
+            render_module = self.config.get_module('nail_ssg_standard.modules.' + render_type + '_render')
             if render_module is None:
                 render_module = self.config.get_module('plain_render')
             if render_module is None:

@@ -12,14 +12,18 @@ def _extract_yaml_data(filename: str):
     with open(filename, 'r', encoding='utf-8') as f:
         yaml_lines = []
         checked_yaml = False
-        for line in f.readlines():
-            striped_line = line.strip()
+        for index, line in enumerate(f.readlines()):
+            striped_line = line.split('#', 1)[0].strip()
             if not checked_yaml and (striped_line != '---'):
+                if index < 5:
+                    continue
+                else:
+                    break
+            if striped_line == '...' and checked_yaml:
                 break
+            if checked_yaml:
+                yaml_lines += [line]
             checked_yaml = True
-            yaml_lines += [line]
-            if striped_line == '...':
-                break
     if striped_line != '...':
         return {}
     yaml_str = ''.join(yaml_lines)
@@ -27,6 +31,7 @@ def _extract_yaml_data(filename: str):
     if not result:
         result = {}
     return result
+
 
 modified_step = False
 
@@ -156,5 +161,6 @@ class SsgMain(BasePlugin):
 
 def create(config):
     return SsgMain(config)
+
 
 __all__ = [SsgMain, create]

@@ -14,17 +14,17 @@ def _extract_yaml_data(filename: str):
         checked_yaml = False
         for index, line in enumerate(f.readlines()):
             striped_line = line.split('#', 1)[0].strip()
-            if not checked_yaml and (striped_line != '---'):
+            if not checked_yaml and striped_line[-3:] != '---':
                 if index < 5:
                     continue
                 else:
                     break
-            if striped_line == '...' and checked_yaml:
+            if striped_line[:3] == '...' and checked_yaml:
                 break
             if checked_yaml:
                 yaml_lines += [line]
             checked_yaml = True
-    if striped_line != '...':
+    if striped_line[:3] != '...':
         return {}
     yaml_str = ''.join(yaml_lines)
     result = yaml.load(yaml_str, Loader=yaml.Loader)

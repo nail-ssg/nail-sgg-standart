@@ -179,13 +179,17 @@ class Pages(BasePlugin):
         return text
 
     def get_text(self, path: str) -> str:
+        start_lines = []
         lines = []
         for line in open(path, 'r', encoding='utf-8').readlines():
-            if line[0:3] != '...':
-                lines += [line]
-            else:
+            if line[-3:] == '---':
+                start_lines = lines
                 lines = []
-        result = ''.join(lines)
+            elif line[:3] == '...':
+                lines = []
+            else:
+                lines += [line]
+        result = ''.join(start_lines + lines)
         return result
 
     def render_file(self, path, context):

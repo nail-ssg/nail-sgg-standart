@@ -1,4 +1,5 @@
 import os
+from nail_config.common import dict_update
 from nail_ssg_base.prints import *
 from nail_ssg_base.modules.baseplugin import BasePlugin
 from shutil import copyfile
@@ -51,7 +52,7 @@ class Static(BasePlugin):
         if folder in self.folders and 'static' in rules:
             rel_path = os.path.relpath(fileinfo['full_path'], self.config.full_src_path).split(os.sep, 1)[1]
             data_ext = {'$global': {'url': rel_path.replace(os.sep, '/')}}
-            data.update(dict_enrich(data, data_ext))
+            dict_update(data, data_ext)
             self.config.static[folder][rel_path] = data
         return data
 

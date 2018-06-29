@@ -23,18 +23,18 @@ scan:
   - data
   - static
   types:
-  - page:
+    page:
       folder: pages
       extractData: true
       rules:
       - fileMask = *.html
       - regExp = \.page\.
-  - data:
+    data:
       extractData: true
       rules:
       - fileMask = *.yml
       - regExp = \.data\.
-  - static:
+    static:
       extractData: false
       rules:
       - fileMask = *.*

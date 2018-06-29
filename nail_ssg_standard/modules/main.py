@@ -43,14 +43,14 @@ def _set_data(self, path, value):
 def _get_data(self, path):
     if not modified_step:
         warnings.warn('No recommended use get_data before "modified" step', stacklevel=2)
-    # print(self)
-    result = self.main_module.old_get_data(path)
-    modules = self('20. getData/order')
-    if result is None:
-        for module in self.modules:
-            result = module.get_data()
-        return result if result is not None else {}
-    # todo: Здесь должен быть перебор модулей которые умееют работать с путями
+    # # print(self)
+    # result = self.main_module.old_get_data(path)
+    # modules = self('20. getData/order')
+    # if result is None:
+    #     for module in self.modules:
+    #         result = module.get_data()
+    #     return result if result is not None else {}
+    # # todo: Здесь должен быть перебор модулей которые умееют работать с путями
     return self.data.get(path, {})
 
 

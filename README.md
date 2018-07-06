@@ -94,6 +94,9 @@ $local:                                     #
   renders:                                  # nail_ssg_standard.renders
     - type: jade                            # 
     - type: mustache                        # 
+      data:                                 #
+        property1: propertyValue1           # 
+        property2: propertyValue2           # 
   use:                                      # nail_ssg_standard.collections
     css:                                    # 
       from: css                             # 

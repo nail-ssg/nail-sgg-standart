@@ -1,9 +1,8 @@
 from nail_ssg_base.prints import *
 from pystache import Renderer
 from nail_ssg_base.modules.baserender import BaseRender
-from nail_config.common import dict_update, dict_glue
+from nail_config.common import dict_glue
 import blinker
-from copy import deepcopy
 
 
 class Mustache(BaseRender):
@@ -20,6 +19,7 @@ class Mustache(BaseRender):
         partials = {}
         if 'data' in render_options:
             context = dict_glue(context, render_options['data'], False)
+        # todo: Обеспечить связь между extend и partial через локальные коллекции
         if 'partials' in render_options:
             for partial_name in render_options['partials']:
                 partial_path = render_options['partials'][partial_name]

@@ -14,6 +14,6 @@ setup(
         'ruamel.yaml>=0.13.14'
     ],
     dependency_links=[
-        'https://github.com/nail-ssg/nail-ssg-base/archive/develop.zip#egg=nail.ssg.base-0.1.0'
+        'https://github.com/nail-ssg/nail-ssg-base/archive/develop.zip#egg=nail.ssg.base-0.1.3'
     ]
 )

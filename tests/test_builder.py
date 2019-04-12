@@ -1,6 +1,6 @@
-import pytest
 from os.path import abspath
-import sys
+
+import pytest
 from nail_ssg_base import builder
 
 

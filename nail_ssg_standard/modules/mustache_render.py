@@ -10,7 +10,7 @@ class Mustache(BaseRender):
     """docstring for Mustache"""
 
     def __init__(self, config):
-        super().__init__(config)
+        super(Mustache, self).__init__(config)
 
     def render(self, text, context, render_options):
         # print(render_options)

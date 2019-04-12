@@ -9,7 +9,7 @@ class Loads(BasePlugin):
         '10. scan': {
             'order': ['nail_ssg_standard.loads']
         },
-        '20. modify': {
+        '30. modify': {
             'order': ['nail_ssg_standard.loads']
         }
     }

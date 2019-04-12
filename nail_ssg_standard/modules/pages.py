@@ -1,14 +1,14 @@
 import os
 import re
-from nail_ssg_base.prints import *
-from nail_ssg_base.modules.baseplugin import BasePlugin
-from nail_config.common import dict_update
-from blinker import signal
 from copy import deepcopy
+
+from blinker import signal
+
+from nail_config.common import dict_update
+from nail_ssg_base.modules.baseplugin import BasePlugin
 
 
 class Pages(BasePlugin):
-
     """docstring for Pages"""
     _default_config = {
         '10. scan': {
@@ -60,7 +60,7 @@ class Pages(BasePlugin):
     #     super().modify_data()
 
     def process_file(self, fileinfo, rules, data):
-        super().process_file(fileinfo, rules, data)
+        super(Pages, self).process_file(fileinfo, rules, data)
         if 'page' in rules:
             rel_path = os.path.relpath(fileinfo['full_path'], self.folder)
             # todo: rename and norename
@@ -89,7 +89,7 @@ class Pages(BasePlugin):
         return data
 
     def build(self):
-        super().build()
+        super(Pages, self).build()
         pages = self.config.pages
         for page in pages:
             url = page['$computed']['url']

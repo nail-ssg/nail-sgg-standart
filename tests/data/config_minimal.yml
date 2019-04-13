@@ -1,11 +1,11 @@
-core:
+00. core:
   src: tests/data/src1
   dist: tests/data/site
   currentNamespace: default
   modules:
     nail_ssg_standard.modules.pages: true
   main: nail_ssg_standard.modules.main
-scan:
+10. scan:
   order:
   - nail_ssg_standard.modules.pages
   - nail_ssg_standard.modules.static

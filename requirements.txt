@@ -1,4 +1,6 @@
-git+https://github.com/nail-ssg/nail-ssg-base@develop
 ruamel.yaml>=0.13.14
-pystache>=0.5.4
-pytest>=3.0.6
+pystache~=0.5.4
+pytest~=4.4
+markdown~=3.1
+
+nail.ssg.base @ git+https://github.com/nail-ssg/nail-ssg-base@develop

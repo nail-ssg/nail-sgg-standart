@@ -1,6 +1,8 @@
 import copy
 from nail_config.common import dict_update, dict_glue
 from nail_ssg_base.modules.baseplugin import BasePlugin
+
+
 # from nail_ssg_base.prints import *
 
 
@@ -31,8 +33,9 @@ class Loads(BasePlugin):
             result = {}
             for load in loads:
                 d = copy.deepcopy(self.config.get_data(load))
-                del d['$computed']
-                if 'abstract' in d['$global']:
+                if '$computed' in d:
+                    del d['$computed']
+                if '$global' in d and 'abstract' in d['$global']:
                     del d['$global']['abstract']
                 result = dict_glue(result, d)
             result = dict_glue(data, result)

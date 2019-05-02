@@ -122,26 +122,26 @@ class SsgMain(BasePlugin):
     def build(self):
         super().build()
 
-    def process_file(self, fileinfo, rules, data):
-        super().process_file(fileinfo, rules, data)
+    def process_file(self, file_info, rules, data):
+        super().process_file(file_info, rules, data)
         # todo: определить к какому правилу относится файл
         # print('*'*20)
         extract_data = False
         for type_name in self.types:
             file_type = self.types[type_name]
-            folder = os.path.relpath(fileinfo['directory'], self.config.full_src_path)
+            folder = os.path.relpath(file_info['directory'], self.config.full_src_path)
             folder = folder.split(os.sep, 1)[0]
-            fileinfo['root'] = folder
+            file_info['root'] = folder
             fld = file_type.get('directory', '*')
             data_ext = {
                 '$computed': {
-                    'file': fileinfo['full_path']
+                    'file': file_info['full_path']
                 }
             }
             data.update(data_ext)
             if not (fld != '*' and folder != fld):
                 for rule in file_type['rules']:
-                    validation = check_rule(rule, fileinfo['name'])
+                    validation = check_rule(rule, file_info['name'])
                     if validation:
                         if type_name not in rules:
                             rules[type_name] = []
@@ -149,7 +149,7 @@ class SsgMain(BasePlugin):
                         extract_data = extract_data or file_type['extractData']
         data['$computed']['rules'] = rules
         if extract_data:
-            filename = fileinfo['full_path']
+            filename = file_info['full_path']
             read_data(filename, data, 'data' in rules)
 
     def init(self):

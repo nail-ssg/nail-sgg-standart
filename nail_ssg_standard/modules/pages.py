@@ -59,10 +59,10 @@ class Pages(BasePlugin):
     # def modify_data(self):
     #     super().modify_data()
 
-    def process_file(self, fileinfo, rules, data):
-        super(Pages, self).process_file(fileinfo, rules, data)
+    def process_file(self, file_info, rules, data):
+        super(Pages, self).process_file(file_info, rules, data)
         if 'page' in rules:
-            rel_path = os.path.relpath(fileinfo['full_path'], self.folder)
+            rel_path = os.path.relpath(file_info['full_path'], self.folder)
             # todo: rename and norename
 
             url = data.get('$global', {}).get('url', None)

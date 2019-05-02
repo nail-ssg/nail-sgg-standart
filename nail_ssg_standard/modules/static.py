@@ -47,10 +47,10 @@ class Static(BasePlugin):
         for folder in self.folders:
             self.config.static[folder] = {}
 
-    def process_file(self, fileinfo, rules, data):
-        folder = fileinfo['root']
+    def process_file(self, file_info, rules, data):
+        folder = file_info['root']
         if folder in self.folders and 'static' in rules:
-            rel_path = os.path.relpath(fileinfo['full_path'], self.config.full_src_path).split(os.sep, 1)[1]
+            rel_path = os.path.relpath(file_info['full_path'], self.config.full_src_path).split(os.sep, 1)[1]
             data_ext = {'$global': {'url': rel_path.replace(os.sep, '/')}}
             dict_update(data, data_ext)
             self.config.static[folder][rel_path] = data

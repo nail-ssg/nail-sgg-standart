@@ -3,7 +3,6 @@ import re
 from copy import deepcopy
 
 from blinker import signal
-
 from nail_config.common import dict_update
 from nail_ssg_base.modules.baseplugin import BasePlugin
 
@@ -50,11 +49,12 @@ class Pages(BasePlugin):
     def __init__(self, config):
         super(Pages, self).__init__(config)
         signal('inset').connect(self._inset)
+        self.config.pages = []
+        self.folder = ''
 
     def init(self):
         folder = self.config('10. scan/types/page/directory')
         self.folder = os.path.join(self.config.full_src_path, folder)
-        self.config.pages = []
 
     # def modify_data(self):
     #     super().modify_data()

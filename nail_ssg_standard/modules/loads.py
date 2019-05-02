@@ -1,5 +1,6 @@
 import copy
 
+from nail_config import Config
 from nail_config.common import dict_glue
 from nail_ssg_base.modules.baseplugin import BasePlugin
 
@@ -18,21 +19,21 @@ class Loads(BasePlugin):
     }
     _config_comments = {}
 
-    def init(self):
-        self.config.loads = []
+    def __init__(self, config: Config):
+        super().__init__(config)
+        self.config.load_list = []
 
     def process_file(self, file_info, rules, data):
         if '$load' in data:
-            self.config.loads += [data]
-        pass
+            self.config.load_list += [data]
 
     def modify_data(self):
-        for data in self.config.loads:
-            loads = data.get('$load', [])
-            if not loads:
+        for data in self.config.load_list:
+            load_list = data.get('$load', [])
+            if not load_list:
                 continue
             result = {}
-            for load in loads:
+            for load in load_list:
                 d = copy.deepcopy(self.config.get_data(load))
                 if '$computed' in d:
                     del d['$computed']
@@ -42,7 +43,7 @@ class Loads(BasePlugin):
             result = dict_glue(data, result)
             data.update(result)
             del data['$load']
-        del self.config.loads
+        del self.config.load_list
 
     def build(self):
         pass

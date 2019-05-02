@@ -1,7 +1,7 @@
 from os.path import abspath
 
+import nail_ssg_base
 import pytest
-from nail_ssg_base import builder
 
 
 # Создать объект builder
@@ -9,7 +9,7 @@ from nail_ssg_base import builder
 def empty_builder():
     filename = abspath('tests/data/config_minimal.yml')
     print(filename)
-    return builder.Builder(filename)
+    return nail_ssg_base.builder.Builder(filename)
 
 
 def test_builder(empty_builder):

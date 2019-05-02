@@ -1,5 +1,6 @@
 import copy
-from nail_config.common import dict_update, dict_glue
+
+from nail_config.common import dict_glue
 from nail_ssg_base.modules.baseplugin import BasePlugin
 
 
@@ -20,7 +21,7 @@ class Loads(BasePlugin):
     def init(self):
         self.config.loads = []
 
-    def process_file(self, fileinfo, rules, data):
+    def process_file(self, file_info, rules, data):
         if '$load' in data:
             self.config.loads += [data]
         pass
@@ -28,7 +29,7 @@ class Loads(BasePlugin):
     def modify_data(self):
         for data in self.config.loads:
             loads = data.get('$load', [])
-            if loads == []:
+            if not loads:
                 continue
             result = {}
             for load in loads:

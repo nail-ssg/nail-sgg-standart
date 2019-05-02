@@ -1,13 +1,17 @@
-from os.path import abspath
+import os
 
 import nail_ssg_base
 import pytest
 
 
 # Создать объект builder
+def full_path(filename):
+    return os.path.join(os.path.dirname(__file__), 'data', filename)
+
+
 @pytest.fixture()
 def empty_builder():
-    filename = abspath('tests/data/config_minimal.yml')
+    filename = full_path('config_minimal.yml')
     print(filename)
     return nail_ssg_base.builder.Builder(filename)
 

@@ -55,6 +55,7 @@ class Pages(BasePlugin):
     def init(self):
         folder = self.config('10. scan/types/page/directory')
         self.folder = os.path.join(self.config.full_src_path, folder)
+        self.config.pages = []
 
     # def modify_data(self):
     #     super().modify_data()

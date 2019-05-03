@@ -23,6 +23,10 @@ class Loads(BasePlugin):
         super().__init__(config)
         self.config.load_list = []
 
+    def init(self):
+        super().init()
+        self.config.load_list = []
+
     def process_file(self, file_info, rules, data):
         if '$load' in data:
             self.config.load_list += [data]
